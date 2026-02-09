@@ -1,0 +1,21 @@
+services:
+  # PostgreSQL com TLS
+  postgres-db:
+    build: ./postgres
+    container_name: smartlab-postgres
+    environment:
+      POSTGRES_DB: iot_database
+      POSTGRES_USER: iot_user
+      POSTGRES_PASSWORD: iot_password_secure
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./certs/postgres:/var/lib/postgresql/certs:ro
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    networks:
+      - iot-network
+    restart: unless-stopped
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
