@@ -75,9 +75,6 @@ chmod 600 ../postgres/certs/server.key
 sudo chmod 777 ../certs/.crt
 sudo chmod 777 ../certs/.key
 
-cp ../certs/ca.crt postgres/ca.crt
-cp ../certs/ca.crt flask/ca.crt
-
 echo "=== Certificados gerados com sucesso! ==="
 echo ""
 echo "Arquivos disponíveis:"
