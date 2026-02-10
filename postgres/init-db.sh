@@ -1,4 +1,6 @@
 #!/bin/bash
+
+chown -R postgres:postgres /var/lib/postgresql/certs
 chmod 600 /var/lib/postgresql/certs/server.key
 chmod 644 /var/lib/postgresql/certs/server.crt /var/lib/postgresql/certs/ca.crt
 
