@@ -1,6 +1,7 @@
 # csilab_2026
 
 ```bash
+git clone https://github.com/acJoaog/csilab_2026.git
 cd /csilab_2026/scripts
 chmod +x *.sh
 sudo ./generate-certs.sh
