@@ -57,11 +57,20 @@ rm ../certs/client.csr
 echo "=== Gerando arquivo PEM combinado para clientes ==="
 cat ../certs/client.crt ../certs/client.key > ../certs/client.pem
 
-echo "=== Copiando CA para todos os serviços ==="
+echo "=== Copiando certificados para o Mqtt ==="
 mkdir -p ../mqtt/certs
 cp ../certs/ca.crt ../mqtt/certs/ca.crt
 cp ../certs/mqtt/server.crt ../mqtt/certs/server.crt
 cp ../certs/mqtt/server.key ../mqtt/certs/server.key
+
+echo "=== Copiando certificados para PostgreSQL ==="
+mkdir -p ../postgres/certs
+cp ../certs/ca.crt ../postgres/certs/ca.crt
+cp ../certs/postgres/server.crt ../postgres/certs/server.crt
+cp ../certs/postgres/server.key ../postgres/certs/server.key
+
+# Ajusta permissões para o PostgreSQL
+chmod 600 ../postgres/certs/server.key
 
 sudo chmod 777 ../certs/.crt
 sudo chmod 777 ../certs/.key

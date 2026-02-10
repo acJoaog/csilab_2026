@@ -1,12 +1,23 @@
 FROM postgres:15-alpine
 
-# Copiar scripts
-COPY ssl-config.sh /docker-entrypoint-initdb.d/
-COPY init.sql /docker-entrypoint-initdb.d/
+# Instalações necessárias
+RUN apk add --no-cache openssl
 
-RUN chmod +x /docker-entrypoint-initdb.d/ssl-config.sh
+# Cria diretório para certificados
+RUN mkdir -p /var/lib/postgresql/certs
 
-EXPOSE 5432
+# Copiar certificados
+COPY  /certs/ /var/lib/postgresql/certs/
 
-# Comando padrão com SSL desabilitado inicialmente
-CMD ["postgres"]
+# Copia configurações
+COPY postgresql.conf /etc/postgresql/postgresql.conf
+COPY pg_hba.conf /etc/postgresql/pg_hba.conf
+
+# Permissões para certificados
+RUN chown -R postgres:postgres /var/lib/postgresql/certs
+
+# Script de inicialização
+COPY init-db.sh /docker-entrypoint-initdb.d/
+
+# Garante que o PostgreSQL tem permissões
+RUN chmod 600 /var/lib/postgresql/certs/*.key 2>/dev/null || true
