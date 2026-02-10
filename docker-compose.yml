@@ -14,10 +14,10 @@ services:
       - mqtt-log:/mosquitto/log
     restart: unless-stopped
 
-  volumes:
-    mqtt-data:
-    mqtt-log:
-    
+volumes:
+  mqtt-data:
+  mqtt-log:
+
   # PostgreSQL com TLS
   #postgres:
   #  build: ./postgres
