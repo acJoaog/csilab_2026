@@ -58,9 +58,9 @@ echo "=== Gerando arquivo PEM combinado para clientes ==="
 cat client.crt client.key > client.pem
 
 echo "=== Copiando CA para todos os serviços ==="
-cp ca.crt mqtt/ca.crt
-cp server.crt mqtt/server.crt
-cp server.key mqtt/server.key
+cp ca.crt ../mqtt/certs/ca.crt
+cp server.crt ../mqtt/certs/server.crt
+cp server.key ../mqtt/certs/server.key
 
 cp ca.crt postgres/ca.crt
 cp ca.crt flask/ca.crt
