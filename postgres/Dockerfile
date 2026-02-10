@@ -20,6 +20,6 @@ RUN chown -R postgres:postgres /var/lib/postgresql/certs
 COPY init-db.sh /docker-entrypoint-initdb.d/
 
 # Garante que o PostgreSQL tem permissões
-RUN chmod 640 /var/lib/postgresql/certs/*.key 2>/dev/null || true
+RUN chmod 600 /var/lib/postgresql/certs/server.key
 
 EXPOSE 5432
