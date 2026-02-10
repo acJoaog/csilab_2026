@@ -16,6 +16,11 @@ services:
       - iot-network
     restart: unless-stopped
 
+  networks:
+    iot-network:
+      driver: bridge
+    
+
   # PostgreSQL com TLS
   #postgres:
   #  build: ./postgres
