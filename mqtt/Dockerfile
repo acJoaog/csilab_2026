@@ -7,7 +7,7 @@ COPY mosquitto.conf /mosquitto/config/mosquitto.conf
 RUN mkdir -p /mosquitto/certs
 
 # Copiar certificados
-COPY ../certs/mqtt /mosquitto/certs/
+COPY ./certs/mqtt /mosquitto/certs/
 
 # Criar diretórios para dados e logs
 RUN mkdir -p /mosquitto/data /mosquitto/log
