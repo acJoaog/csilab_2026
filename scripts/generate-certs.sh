@@ -63,6 +63,9 @@ cp ../certs/ca.crt ../mqtt/certs/ca.crt
 cp ../certs/mqtt/server.crt ../mqtt/certs/server.crt
 cp ../certs/mqtt/server.key ../mqtt/certs/server.key
 
+sudo chmod 777 ../certs/.crt
+sudo chmod 777 ../certs/.key
+
 cp ../certs/ca.crt postgres/ca.crt
 cp ../certs/ca.crt flask/ca.crt
 
