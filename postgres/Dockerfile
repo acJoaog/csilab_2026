@@ -10,8 +10,8 @@ RUN mkdir -p /var/lib/postgresql/certs
 COPY  /certs/ /var/lib/postgresql/certs/
 
 # Copia configurações
-COPY postgresql.conf /etc/postgresql/postgresql.conf
-COPY pg_hba.conf /etc/postgresql/pg_hba.conf
+COPY /conf/postgresql.conf /etc/postgresql/postgresql.conf
+COPY /conf/pg_hba.conf /etc/postgresql/pg_hba.conf
 
 # Permissões para certificados
 RUN chown -R postgres:postgres /var/lib/postgresql/certs
