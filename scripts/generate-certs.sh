@@ -45,17 +45,17 @@ openssl x509 -req -in ../certs/flask/server.csr -CA ../certs/ca.crt -CAkey ../ce
 rm ../certs/flask/server.csr
 
 echo "=== Gerando certificados para clientes (IoT devices) ==="
-openssl genrsa -out client.key 2048
-openssl req -new -key client.key -out client.csr \
+openssl genrsa -out ../certs/client.key 2048
+openssl req -new -key ../certs/client.key -out ../certs/client.csr \
   -subj "/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=iot-device"
 
-openssl x509 -req -in client.csr -CA ../certs/ca.crt -CAkey ../certs/ca.key \
-  -CAcreateserial -out client.crt -days 365 -sha256
+openssl x509 -req -in ../certs/client.csr -CA ../certs/ca.crt -CAkey ../certs/ca.key \
+  -CAcreateserial -out ../certs/client.crt -days 365 -sha256
 
 rm ../certs/client.csr
 
 echo "=== Gerando arquivo PEM combinado para clientes ==="
-cat ../certs/client.crt ../certs/client.key > ../certsclient.pem
+cat ../certs/client.crt ../certs/client.key > ../certs/client.pem
 
 echo "=== Copiando CA para todos os serviços ==="
 mkdir -p ../mqtt/certs
