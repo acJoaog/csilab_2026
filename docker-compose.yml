@@ -8,7 +8,7 @@ services:
       - "8883:8883"  # MQTT com TLS
       - "9002:9001"  # WebSocket com TLS (alterada para 9002)
     volumes:
-      - ./certs/mqtt:/mosquitto/certs
+      - ./mqtt/certs:/mosquitto/certs
       - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mqtt-data:/mosquitto/data
       - mqtt-log:/mosquitto/log
