@@ -59,6 +59,9 @@ cat client.crt client.key > client.pem
 
 echo "=== Copiando CA para todos os serviços ==="
 cp ca.crt mqtt/ca.crt
+cp server.crt mqtt/server.crt
+cp server.key mqtt/server.key
+
 cp ca.crt postgres/ca.crt
 cp ca.crt flask/ca.crt
 
