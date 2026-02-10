@@ -12,14 +12,7 @@ services:
       - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mqtt-data:/mosquitto/data
       - mqtt-log:/mosquitto/log
-    networks:
-      - iot-network
     restart: unless-stopped
-
-  networks:
-    iot-network:
-      driver: bridge
-    
 
   # PostgreSQL com TLS
   #postgres:
