@@ -72,11 +72,11 @@ cp ../certs/postgres/server.key ../postgres/certs/server.key
 # Ajusta permissões para o PostgreSQL
 chmod 600 ../postgres/certs/server.key
 
-sudo chmod 777 ../certs/*.crt
-sudo chmod 777 ../certs/*.key
+sudo chmod 600 ../certs/*.crt
+sudo chmod 600 ../certs/*.key
 
-sudo chmod 777 ../postgres/certs/*.crt
-sudo chmod 777 ../postgres/certs/*.key
+sudo chmod 600 ../postgres/certs/*.crt
+sudo chmod 600 ../postgres/certs/*.key
 
 echo "=== Certificados gerados com sucesso! ==="
 echo ""
