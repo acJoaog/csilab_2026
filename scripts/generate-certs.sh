@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Diretórios
-mkdir -p ../certs 
 mkdir -p ../certs/mqtt ../certs/postgres ../certs/flask
 
 echo "=== Gerando Autoridade Certificadora (CA) ==="

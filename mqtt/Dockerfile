@@ -3,10 +3,8 @@ FROM eclipse-mosquitto:2.0
 # Copiar configuração
 COPY mosquitto.conf /mosquitto/config/mosquitto.conf
 
-
-
 # Copiar certificados
-COPY ./certs/mqtt /mosquitto/certs/
+COPY  /certs/ /mosquitto/certs/
 
 # Criar diretórios para dados e logs
 RUN mkdir -p /mosquitto/data /mosquitto/log
