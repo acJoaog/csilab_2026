@@ -73,10 +73,10 @@ cp ../certs/postgres/server.key ../postgres/certs/server.key
 chmod 600 ../postgres/certs/server.key
 
 sudo chmod 644 ../certs/*.crt
-sudo chmod 600 ../certs/*.key
+sudo chmod 644 ../certs/*.key
 
 sudo chmod 644 ../postgres/certs/*.crt
-sudo chmod 600 ../postgres/certs/*.key
+sudo chmod 777 ../postgres/certs/*.key
 
 echo "=== Certificados gerados com sucesso! ==="
 echo ""
