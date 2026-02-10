@@ -1,4 +1,7 @@
 #!/bin/bash
+chmod 600 /var/lib/postgresql/certs/server.key
+chmod 644 /var/lib/postgresql/certs/server.crt /var/lib/postgresql/certs/ca.crt
+
 set -e
 
 echo "=== Inicializando banco de dados SmartLab ==="
