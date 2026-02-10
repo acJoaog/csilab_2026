@@ -76,7 +76,7 @@ sudo chmod 644 ../certs/*.crt
 sudo chmod 644 ../certs/*.key
 
 sudo chmod 644 ../postgres/certs/*.crt
-sudo chmod 777 ../postgres/certs/*.key
+sudo chmod 640 ../postgres/certs/*.key
 
 echo "=== Certificados gerados com sucesso! ==="
 echo ""
