@@ -10,8 +10,8 @@ RUN mkdir -p /var/lib/postgresql/certs
 COPY  /certs/ /var/lib/postgresql/certs/
 
 # Copia configurações
-COPY /conf/postgresql.conf /var/lib/postgresql/data/postgresql.conf
-COPY /conf/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf
+COPY /conf/postgresql.conf /etc/postgresql/postgresql.conf
+COPY /conf/pg_hba.conf /etc/postgresql/pg_hba.conf
 
 # Permissões para certificados
 RUN chown -R postgres:postgres /var/lib/postgresql/certs
@@ -21,3 +21,5 @@ COPY init-db.sh /docker-entrypoint-initdb.d/
 
 # Garante que o PostgreSQL tem permissões
 RUN chmod 600 /var/lib/postgresql/certs/*.key 2>/dev/null || true
+
+EXPOSE 5432

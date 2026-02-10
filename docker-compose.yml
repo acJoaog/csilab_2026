@@ -20,18 +20,21 @@ services:
     build: ./postgres
     container_name: smartlab-postgres
     environment:
-      POSTGRES_USER: smartlab
-      POSTGRES_PASSWORD: WhoAmI#2026
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: smartlab_db
+      # Configurações via variáveis de ambiente
+      POSTGRESQL_SSL: "on"
+      POSTGRESQL_SSL_CERT_FILE: "/var/lib/postgresql/certs/server.crt"
+      POSTGRESQL_SSL_KEY_FILE: "/var/lib/postgresql/certs/server.key"
+      POSTGRESQL_SSL_CA_FILE: "/var/lib/postgresql/certs/ca.crt"
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./postgres/certs:/var/lib/postgresql/certs
-      - ./postgres/init:/docker-entrypoint-initdb.d
+      - ./postgres/conf:/etc/postgresql/  # Para configs personalizadas
     restart: unless-stopped
-    networks:
-      - smartlab-network
 
 networks:
   smartlab-network:
