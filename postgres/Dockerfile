@@ -8,8 +8,7 @@ RUN apk add --no-cache openssl
 COPY certs /etc/postgresql/certs/
 
 # JÁ MUDA O DONO AQUI, como root
-RUN chown -R postgres:postgres /etc/postgresql/certs && \
-    chmod 600 /etc/postgresql/certs/server.key
+RUN chown postgres:postgres /etc/postgresql/certs/server.key && chmod 600 /etc/postgresql/certs/server.key
 
 # Define permissões CORRETAS e ANTES de qualquer execução
 RUN mkdir -p /etc/postgresql && \
