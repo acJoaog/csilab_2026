@@ -93,6 +93,10 @@ rm "$POSTGRES_CERTS/server.csr"
 
 cp "$CA_DIR/ca.crt" "$POSTGRES_CERTS/ca.crt"
 
+sudo chown 999:999 "$POSTGRES_CERTS/server.key"
+sudo chown 999:999 "$POSTGRES_CERTS/server.crt"
+sudo chown 999:999 "$POSTGRES_CERTS/ca.crt"
+
 chmod 600 "$POSTGRES_CERTS/server.key"
 chmod 644 "$POSTGRES_CERTS/server.crt"
 chmod 644 "$POSTGRES_CERTS/ca.crt"
