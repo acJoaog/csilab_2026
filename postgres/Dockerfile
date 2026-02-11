@@ -15,8 +15,13 @@ RUN chown -R postgres:postgres /etc/postgresql/certs/ && \
     chmod 644 /etc/postgresql/certs/server.crt /etc/postgresql/certs/ca.crt
 
 # Copia configurações
-COPY ./conf/postgresql.conf /tmp/postgresql.conf
-COPY ./conf/pg_hba.conf /tmp/pg_hba.conf
+COPY ./conf/postgresql.conf /etc/postgresql/postgresql.conf
+COPY ./conf/pg_hba.conf /etc/postgresql/pg_hba.conf
+
+# Ajustar permissões
+RUN chown -R postgres:postgres /etc/postgresql \
+    && chmod 644 /etc/postgresql/postgresql.conf \
+    && chmod 600 /etc/postgresql/pg_hba.conf
 
 # Script de inicialização
 COPY init-db.sh /docker-entrypoint-initdb.d/
@@ -25,3 +30,5 @@ COPY init-db.sh /docker-entrypoint-initdb.d/
 COPY setup-ssl.sh /docker-entrypoint-initdb.d/01-setup-ssl.sh
 
 EXPOSE 5432
+
+CMD ["postgres", "-c", "config_file=/temp/postgresql.conf"]
