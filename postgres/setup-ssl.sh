@@ -4,9 +4,9 @@ set -e
 echo "=== Configurando SSL para PostgreSQL ==="
 
 # Garante permissões corretas para os certificados
-chown -R postgres:postgres /var/lib/postgresql/certs
-chmod 600 /var/lib/postgresql/certs/server.key
-chmod 644 /var/lib/postgresql/certs/server.crt /var/lib/postgresql/certs/ca.crt
+chown -R postgres:postgres /etc/postgresql/certs
+chmod 600 /etc/postgresql/certs/server.key
+chmod 644 /etc/postgresql/certs/server.crt /etc/postgresql/certs/ca.crt
 
 # Copia configurações para o data directory
 if [ -f /tmp/postgresql.conf ]; then

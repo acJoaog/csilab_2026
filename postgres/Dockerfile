@@ -4,19 +4,19 @@ FROM postgres:15-alpine
 RUN apk add --no-cache openssl
 
 # Cria diretório para certificados
-RUN mkdir -p /var/lib/postgresql/certs
+RUN mkdir -p /etc/postgresql/certs/
 
 # Copiar certificados com permissões adequadas
-COPY ./certs/ /var/lib/postgresql/certs/
+COPY ./certs/ /etc/postgresql/certs/
 
 # Ajusta permissões ANTES de copiar para data directory
-RUN chown -R postgres:postgres /var/lib/postgresql/certs && \
-    chmod 600 /var/lib/postgresql/certs/server.key && \
-    chmod 644 /var/lib/postgresql/certs/server.crt /var/lib/postgresql/certs/ca.crt
+RUN chown -R postgres:postgres /etc/postgresql/certs/ && \
+    chmod 600 /etc/postgresql/certs/server.key && \
+    chmod 644 /etc/postgresql/certs/server.crt /etc/postgresql/certs/ca.crt
 
 # Copia configurações
-COPY ./conf/postgresql.conf /var/lib/postgresql/data/postgresql.conf
-COPY ./conf/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf
+COPY ./conf/postgresql.conf /tmp/postgresql.conf
+COPY ./conf/pg_hba.conf /tmp/postgresql/data/pg_hba.conf
 
 # Script de inicialização
 COPY init-db.sh /docker-entrypoint-initdb.d/
