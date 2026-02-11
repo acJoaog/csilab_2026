@@ -15,8 +15,8 @@ RUN chown -R postgres:postgres /var/lib/postgresql/certs && \
     chmod 644 /var/lib/postgresql/certs/server.crt /var/lib/postgresql/certs/ca.crt
 
 # Copia configurações
-COPY ./conf/postgresql.conf /tmp/postgresql.conf
-COPY ./conf/pg_hba.conf /tmp/pg_hba.conf
+COPY ./conf/postgresql.conf /var/lib/postgresql/data/postgresql.conf
+COPY ./conf/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf
 
 # Script de inicialização
 COPY init-db.sh /docker-entrypoint-initdb.d/
