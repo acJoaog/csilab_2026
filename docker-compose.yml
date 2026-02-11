@@ -21,7 +21,7 @@ services:
     container_name: smartlab-postgres
     user: "root:root"  # 🔥 ESSENCIAL! Inicia como root
     environment:
-      POSTGRES_USER: admin
+      POSTGRES_USER: smartlab
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: smartlab_db
     ports:
