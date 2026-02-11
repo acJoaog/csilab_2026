@@ -2,7 +2,7 @@
 
 echo "=== Testando conexão com PostgreSQL TLS ==="
 
-chmod 600 ../../certs/client.key
+chmod 600 ../../export/client.key
 
 # Teste com SSL obrigatório
 echo "1. Testando conexão com SSL (deve funcionar):"
