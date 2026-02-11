@@ -1,89 +1,127 @@
 #!/bin/bash
+set -e
 
-# Diretórios
-mkdir -p ../certs/mqtt ../certs/postgres ../certs/flask
+# =========================================================
+# CONFIG
+# =========================================================
+BASE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+CERTS_DIR="$BASE_DIR/certs"
+EXPORT_DIR="$BASE_DIR/export"
+DAYS_CA=3650
+DAYS_CERT=365
 
-echo "=== Gerando Autoridade Certificadora (CA) ==="
-openssl genrsa -out ../certs/ca.key 2048
-openssl req -new -x509 -days 3650 -key ../certs/ca.key -out ../certs/ca.crt \
-  -subj "/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=IoT CA"
+SUBJ_CA="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=IoT CA"
 
-echo "=== Gerando certificados para MQTT Broker ==="
-# Chave privada do broker
-openssl genrsa -out ../certs/mqtt/server.key 2048
+SUBJ_MQTT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=mqtt-broker"
+SUBJ_POSTGRES="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=postgres-db"
+SUBJ_FLASK="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=flask-api"
+SUBJ_CLIENT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=iot-client"
 
-# CSR do broker
-openssl req -new -key ../certs/mqtt/server.key -out ../certs/mqtt/server.csr \
-  -subj "/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=mqtt-broker"
+# =========================================================
+# HELPERS
+# =========================================================
+create_dir() {
+  mkdir -p "$1"
+}
 
-# Certificado assinado pela CA
-openssl x509 -req -in ../certs/mqtt/server.csr -CA ../certs/ca.crt -CAkey ../certs/ca.key \
-  -CAcreateserial -out ../certs/mqtt/server.crt -days 365 -sha256
+gen_key() {
+  openssl genrsa -out "$1" 2048
+}
 
-# Remover CSR
-rm ../certs/mqtt/server.csr
+gen_csr() {
+  openssl req -new -key "$1" -out "$2" -subj "$3"
+}
 
-echo "=== Gerando certificados para PostgreSQL ==="
-openssl genrsa -out ../certs/postgres/server.key 2048
-openssl req -new -key ../certs/postgres/server.key -out ../certs/postgres/server.csr \
-  -subj "/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=postgres-db"
+sign_cert() {
+  openssl x509 -req \
+    -in "$1" \
+    -CA "$CERTS_DIR/ca/ca.crt" \
+    -CAkey "$CERTS_DIR/ca/ca.key" \
+    -CAcreateserial \
+    -out "$2" \
+    -days "$DAYS_CERT" \
+    -sha256
+}
 
-openssl x509 -req -in ../certs/postgres/server.csr -CA ../certs/ca.crt -CAkey ../certs/ca.key \
-  -CAcreateserial -out ../certs/postgres/server.crt -days 365 -sha256
+# =========================================================
+# SETUP DIRS
+# =========================================================
+echo "📁 Criando diretórios..."
+create_dir "$CERTS_DIR/ca"
+create_dir "$CERTS_DIR/mqtt"
+create_dir "$CERTS_DIR/postgres"
+create_dir "$CERTS_DIR/flask"
+create_dir "$CERTS_DIR/client"
 
-rm ../certs/postgres/server.csr
-chmod 600 ../certs/postgres/server.key
+create_dir "$EXPORT_DIR"
 
-echo "=== Gerando certificados para Flask API ==="
-openssl genrsa -out ../certs/flask/server.key 2048
-openssl req -new -key ../certs/flask/server.key -out ../certs/flask/server.csr \
-  -subj "/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=flask-api"
+# =========================================================
+# CA
+# =========================================================
+echo "🔐 Gerando CA..."
+gen_key "$CERTS_DIR/ca/ca.key"
+openssl req -new -x509 \
+  -key "$CERTS_DIR/ca/ca.key" \
+  -out "$CERTS_DIR/ca/ca.crt" \
+  -days "$DAYS_CA" \
+  -subj "$SUBJ_CA"
 
-openssl x509 -req -in ../certs/flask/server.csr -CA ../certs/ca.crt -CAkey ../certs/ca.key \
-  -CAcreateserial -out ../certs/flask/server.crt -days 365 -sha256
+chmod 600 "$CERTS_DIR/ca/ca.key"
+chmod 644 "$CERTS_DIR/ca/ca.crt"
 
-rm ../certs/flask/server.csr
+# =========================================================
+# MQTT
+# =========================================================
+echo "🔐 Gerando certificado MQTT..."
+gen_key "$CERTS_DIR/mqtt/server.key"
+gen_csr "$CERTS_DIR/mqtt/server.key" "$CERTS_DIR/mqtt/server.csr" "$SUBJ_MQTT"
+sign_cert "$CERTS_DIR/mqtt/server.csr" "$CERTS_DIR/mqtt/server.crt"
+rm "$CERTS_DIR/mqtt/server.csr"
+chmod 600 "$CERTS_DIR/mqtt/server.key"
+chmod 644 "$CERTS_DIR/mqtt/server.crt"
 
-echo "=== Gerando certificados para clientes (IoT devices) ==="
-openssl genrsa -out ../certs/client.key 2048
-openssl req -new -key ../certs/client.key -out ../certs/client.csr \
-  -subj "/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=iot-device"
+# =========================================================
+# POSTGRES
+# =========================================================
+echo "🔐 Gerando certificado PostgreSQL..."
+gen_key "$CERTS_DIR/postgres/server.key"
+gen_csr "$CERTS_DIR/postgres/server.key" "$CERTS_DIR/postgres/server.csr" "$SUBJ_POSTGRES"
+sign_cert "$CERTS_DIR/postgres/server.csr" "$CERTS_DIR/postgres/server.crt"
+rm "$CERTS_DIR/postgres/server.csr"
+chmod 600 "$CERTS_DIR/postgres/server.key"
+chmod 644 "$CERTS_DIR/postgres/server.crt"
 
-openssl x509 -req -in ../certs/client.csr -CA ../certs/ca.crt -CAkey ../certs/ca.key \
-  -CAcreateserial -out ../certs/client.crt -days 365 -sha256
+# =========================================================
+# FLASK
+# =========================================================
+echo "🔐 Gerando certificado Flask..."
+gen_key "$CERTS_DIR/flask/server.key"
+gen_csr "$CERTS_DIR/flask/server.key" "$CERTS_DIR/flask/server.csr" "$SUBJ_FLASK"
+sign_cert "$CERTS_DIR/flask/server.csr" "$CERTS_DIR/flask/server.crt"
+rm "$CERTS_DIR/flask/server.csr"
+chmod 600 "$CERTS_DIR/flask/server.key"
+chmod 644 "$CERTS_DIR/flask/server.crt"
 
-rm ../certs/client.csr
+# =========================================================
+# CLIENT
+# =========================================================
+echo "🔐 Gerando certificado CLIENT..."
+gen_key "$CERTS_DIR/client/client.key"
+gen_csr "$CERTS_DIR/client/client.key" "$CERTS_DIR/client/client.csr" "$SUBJ_CLIENT"
+sign_cert "$CERTS_DIR/client/client.csr" "$CERTS_DIR/client/client.crt"
+rm "$CERTS_DIR/client/client.csr"
+chmod 600 "$CERTS_DIR/client/client.key"
+chmod 644 "$CERTS_DIR/client/client.crt"
 
-echo "=== Gerando arquivo PEM combinado para clientes ==="
-cat ../certs/client.crt ../certs/client.key > ../certs/client.pem
+# =========================================================
+# EXPORT
+# =========================================================
+echo "📦 Exportando certificados públicos..."
+cp "../certs/ca/ca.crt" "$EXPORT_DIR/"
+cp "$CERTS_DIR/client/client.crt" "$EXPORT_DIR/"
+cp "$CERTS_DIR/client/client.key" "$EXPORT_DIR/"
 
-echo "=== Copiando certificados para o Mqtt ==="
-mkdir -p ../mqtt/certs
-cp ../certs/ca.crt ../mqtt/certs/ca.crt
-cp ../certs/mqtt/server.crt ../mqtt/certs/server.crt
-cp ../certs/mqtt/server.key ../mqtt/certs/server.key
+chmod 777 "$EXPORT_DIR"
+chmod 777 "$EXPORT_DIR"/*
 
-echo "=== Copiando certificados para PostgreSQL ==="
-mkdir -p ../postgres/certs
-cp ../certs/ca.crt ../postgres/certs/ca.crt
-cp ../certs/postgres/server.crt ../postgres/certs/server.crt
-cp ../certs/postgres/server.key ../postgres/certs/server.key
-
-# Ajusta permissões para o PostgreSQL
-chmod 600 ../postgres/certs/server.key
-
-sudo chmod 777 ../certs/*.crt
-sudo chmod 777 ../certs/*.key
-
-sudo chmod 777 ../postgres/certs/*.crt
-sudo chmod 777 ../postgres/certs/*.key
-
-echo "=== Certificados gerados com sucesso! ==="
-echo ""
-echo "Arquivos disponíveis:"
-echo "- ca.crt: Certificado da autoridade certificadora"
-echo "- client.crt / client.key: Para dispositivos IoT"
-echo "- client.pem: Certificado e chave combinados"
-echo "- mqtt/: Certificados do broker MQTT"
-echo "- postgres/: Certificados do PostgreSQL"
-echo "- flask/: Certificados da API Flask"
+echo "✅ Certificados gerados com sucesso"

@@ -22,10 +22,10 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 
     echo "=== Banco de dados inicializado com sucesso! ==="
 
-    CREATE USER admin WITH PASSWORD 'admin';
-    GRANT CONNECT ON DATABASE smartlab_db TO admin;
-    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
-    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO admin;
+    CREATE USER smartlab WITH PASSWORD 'admin';
+    GRANT CONNECT ON DATABASE smartlab_db TO smartlab;
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO smartlab;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO smartlab;
 
     -- Criar usuário admin padrão (senha: admin123 - alterar em produção)
     INSERT INTO users (username, email, password_hash) 
