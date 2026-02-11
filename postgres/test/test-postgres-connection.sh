@@ -2,6 +2,8 @@
 
 echo "=== Testando conexão com PostgreSQL TLS ==="
 
+chmod 600 ../../certs/client.key
+
 # Teste com SSL obrigatório
 echo "1. Testando conexão com SSL (deve funcionar):"
 PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=admin sslmode=require sslcert=../../certs/client.crt sslkey=../../certs/client.key" -c "SELECT 'Conexão SSL bem-sucedida!' as status;"
@@ -13,3 +15,5 @@ PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=admin ss
 echo ""
 echo "3. Verificando status do SSL no PostgreSQL:"
 PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=admin sslmode=require sslcert=../../certs/client.crt sslkey=../../certs/client.key" -c "SHOW ssl; SELECT version();"
+
+chmod 777 ../../certs/client.key
