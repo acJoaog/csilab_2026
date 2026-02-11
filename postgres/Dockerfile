@@ -31,4 +31,4 @@ COPY setup-ssl.sh /docker-entrypoint-initdb.d/01-setup-ssl.sh
 
 EXPOSE 5432
 
-CMD ["postgres", "-c", "config_file=/temp/postgresql.conf"]
+CMD ["postgres", "-c", "config_file=/tmp/postgresql.conf"]
