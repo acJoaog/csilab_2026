@@ -1,4 +1,4 @@
-# csilab_2026
+# Smartlab 2026
 
 ```bash
 git clone https://github.com/acJoaog/csilab_2026.git
