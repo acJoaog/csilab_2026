@@ -7,6 +7,10 @@ RUN apk add --no-cache openssl
 # IMPORTANTE: Os certificados devem estar no contexto do build
 COPY certs /etc/postgresql/certs/
 
+# JÁ MUDA O DONO AQUI, como root
+RUN chown -R postgres:postgres /etc/postgresql/certs && \
+    chmod 600 /etc/postgresql/certs/server.key
+
 # Define permissões CORRETAS e ANTES de qualquer execução
 RUN mkdir -p /etc/postgresql && \
     chown -R postgres:postgres /etc/postgresql && \
