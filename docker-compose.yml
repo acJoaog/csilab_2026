@@ -29,8 +29,8 @@ services:
       - ./postgres/certs:/etc/postgresql/certs:ro
       #- postgres-data:/var/lib/postgresql/data
       #- ./postgres/certs:/var/lib/postgresql/certs
-      #- ./postgres/conf/postgresql.conf:/var/lib/postgresql/data/postgresql.conf  # Para configs personalizadas
-      #- ./postgres/conf/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf  # Para configs personalizadas
+      - ./postgres/conf/postgresql.conf:/var/lib/postgresql/data/postgresql.conf  # Para configs personalizadas
+      - ./postgres/conf/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf  # Para configs personalizadas
     restart: unless-stopped
     networks:
       - smartlab-network
