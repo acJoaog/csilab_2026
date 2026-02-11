@@ -12,7 +12,7 @@ EXPORT_DIR="$ROOT_DIR/export"
 
 MQTT_CERTS="$ROOT_DIR/mqtt/certs"
 POSTGRES_CERTS="$ROOT_DIR/postgres/certs"
-FLASK_CERTS="$ROOT_DIR/flask/certs"
+FLASK_CERTS="$ROOT_DIR/flask-api/certs"
 
 DAYS_CA=3650
 DAYS_CERT=365
