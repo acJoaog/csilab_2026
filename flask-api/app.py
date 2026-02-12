@@ -24,24 +24,35 @@ def health():
 def db_check():
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            # Verifica se SSL está ativo
+            # SSL ativo?
             cur.execute("SHOW ssl;")
             ssl_on = cur.fetchone()[0]
             
-            # Tenta obter a cipher SSL, retorna None se não disponível
-            try:
-                cur.execute("""
-                    SELECT ssl_cipher 
-                    FROM pg_stat_ssl 
-                    WHERE pid = pg_backend_pid();
-                """)
-                result = cur.fetchone()
-                cipher = result[0] if result else None
-            except psycopg.Error:
-                cipher = None
+            # Detalhes da conexão atual
+            cur.execute("""
+                SELECT 
+                    ssl_cipher,
+                    ssl_version,
+                    ssl_compression
+                FROM pg_stat_ssl 
+                WHERE pid = pg_backend_pid();
+            """)
+            result = cur.fetchone()
+            
+            # Configurações SSL do servidor
+            cur.execute("""
+                SELECT name, setting 
+                FROM pg_settings 
+                WHERE name IN ('ssl_ciphers', 'ssl_min_protocol_version');
+            """)
+            ssl_settings = dict(cur.fetchall())
 
     return {
         "ssl": ssl_on,
-        "cipher": cipher
+        "cipher": result[0] if result else None,
+        "ssl_version": result[1] if result and len(result) > 1 else None,
+        "compression": result[2] if result and len(result) > 2 else None,
+        "server_ciphers": ssl_settings.get('ssl_ciphers'),
+        "min_protocol": ssl_settings.get('ssl_min_protocol_version')
     }
 
