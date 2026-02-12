@@ -12,7 +12,6 @@ def get_db_connection():
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         sslmode=os.getenv("DB_SSLMODE"),
-        sslrootcert=os.getenv("DB_SSLROOTCERT"),
         sslcert=os.getenv("DB_SSLCERT"),
         sslkey=os.getenv("DB_SSLKEY"),
     )

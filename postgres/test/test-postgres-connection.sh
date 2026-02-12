@@ -2,11 +2,11 @@
 
 echo "=== Testando conexão com PostgreSQL TLS ==="
 
-chmod 600 ../../export/client.key
+chmod 600 ../../export/smartlab-client.key
 
 # Teste com SSL obrigatório
 echo "1. Testando conexão com SSL (deve funcionar):"
-PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=smartlab sslmode=require sslcert=../../export/client.crt sslkey=../../export/client.key" -c "SELECT 'Conexão SSL bem-sucedida!' as status;"
+PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=smartlab sslmode=require sslcert=../../export/smartlab-client.crt sslkey=../../export/smartlab-client.key" -c "SELECT 'Conexão SSL bem-sucedida!' as status;"
 
 echo ""
 echo "2. Testando conexão sem SSL (deve falhar):"
@@ -14,6 +14,6 @@ PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=admin ss
 
 echo ""
 echo "3. Verificando status do SSL no PostgreSQL:"
-PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=smartlab sslmode=require sslcert=../../export/client.crt sslkey=../../export/client.key" -c "SHOW ssl; SELECT version();"
+PGPASSWORD=admin psql "host=localhost port=5432 dbname=smartlab_db user=smartlab sslmode=require sslcert=../../export/smartlab-client.crt sslkey=../../export/smartlab-client.key" -c "SHOW ssl; SELECT version();"
 
-chmod 777 ../../export/client.key
+chmod 777 ../../export/smartlab-client.key
