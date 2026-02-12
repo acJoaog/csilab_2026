@@ -20,3 +20,20 @@ def get_db_connection():
 @app.route("/")
 def health():
     return {"status": "ok"}
+
+@app.route("/db-check")
+def db_check():
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SHOW ssl;")
+            ssl_on = cur.fetchone()[0]
+
+            cur.execute("SHOW ssl_cipher;")
+            cipher = cur.fetchone()[0]
+
+    return {
+        "ssl": ssl_on,
+        "cipher": cipher
+    }
+
+
