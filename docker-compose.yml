@@ -64,7 +64,7 @@ services:
       - DB_NAME=smartlab_db
       - DB_USER=smartlab
       - DB_PASSWORD=admin
-      - DB_SSLMODE=requeire
+      - DB_SSLMODE=required
       - DB_SSLCERT=/app/certs/client.crt
       - DB_SSLKEY=/app/certs/client.key
     restart: unless-stopped
