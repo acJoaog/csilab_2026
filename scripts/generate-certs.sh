@@ -12,6 +12,7 @@ EXPORT_DIR="$ROOT_DIR/export"
 
 MQTT_CERTS="$ROOT_DIR/mqtt/certs"
 POSTGRES_CERTS="$ROOT_DIR/postgres/certs"
+NGINX_CERTS="$ROOT_DIR/nginx/certs"
 FLASK_CERTS="$ROOT_DIR/flask-api/certs"
 
 DAYS_CA=3650
@@ -20,11 +21,12 @@ DAYS_CERT=365
 # =========================================================
 # SUBJECTS
 # =========================================================
-SUBJ_CA="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=IoT CA"
-SUBJ_MQTT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=mqtt-broker"
-SUBJ_POSTGRES="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=postgres-db"
-SUBJ_FLASK="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=flask-api"
-SUBJ_CLIENT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=smartlab"
+SUBJ_CA="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=Smartlab CA"
+SUBJ_MQTT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=mqtt-broker"
+SUBJ_POSTGRES="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=postgres-db"
+SUBJ_NGINX="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=192.168.66.11fc"
+SUBJ_CLIENT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=iot-client"
+SUBJ_CLIENT_SMARTLAB="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=smartlab"
 
 # =========================================================
 # HELPERS
@@ -50,7 +52,7 @@ echo "📁 Criando diretórios..."
 mk "$CA_DIR"
 mk "$MQTT_CERTS"
 mk "$POSTGRES_CERTS"
-mk "$FLASK_CERTS"
+mk "$NGINX_CERTS"
 mk "$EXPORT_DIR"
 
 # =========================================================
@@ -98,19 +100,19 @@ chmod 644 "$POSTGRES_CERTS/server.crt"
 chmod 644 "$POSTGRES_CERTS/ca.crt"
 
 # =========================================================
-# FLASK
+# NGINX
 # =========================================================
-echo "🔐 Flask API..."
-gen_key "$FLASK_CERTS/server.key"
-gen_csr "$FLASK_CERTS/server.key" "$FLASK_CERTS/server.csr" "$SUBJ_FLASK"
-sign "$FLASK_CERTS/server.csr" "$FLASK_CERTS/server.crt"
-rm "$FLASK_CERTS/server.csr"
+echo "🔐 NGINX ..."
+gen_key "$NGINX_CERTS/server.key"
+gen_csr "$NGINX_CERTS/server.key" "$NGINX_CERTS/server.csr" "$SUBJ_NGINX"
+sign "$NGINX_CERTS/server.csr" "$NGINX_CERTS/server.crt"
+rm "$NGINX_CERTS/server.csr"
 
-cp "$CA_DIR/ca.crt" "$FLASK_CERTS/ca.crt"
+cp "$CA_DIR/ca.crt" "$NGINX_CERTS/ca.crt"
 
-chmod 600 "$FLASK_CERTS/server.key"
-chmod 644 "$FLASK_CERTS/server.crt"
-chmod 644 "$FLASK_CERTS/ca.crt"
+chmod 600 "$NGINX_CERTS/server.key"
+chmod 644 "$NGINX_CERTS/server.crt"
+chmod 644 "$NGINX_CERTS/ca.crt"
 
 # =========================================================
 # CLIENTS (EXPORT)
@@ -125,9 +127,12 @@ rm "$EXPORT_DIR/client.csr"
 
 # smartlab-client.key / smartlab-client.crt
 gen_key "$EXPORT_DIR/smartlab-client.key"
-gen_csr "$EXPORT_DIR/smartlab-client.key" "$EXPORT_DIR/smartlab-client.csr" "$SUBJ_CLIENT"
+gen_csr "$EXPORT_DIR/smartlab-client.key" "$EXPORT_DIR/smartlab-client.csr" "$SUBJ_CLIENT_SMARTLAB"
 sign "$EXPORT_DIR/smartlab-client.csr" "$EXPORT_DIR/smartlab-client.crt"
 rm "$EXPORT_DIR/smartlab-client.csr"
+
+cp "$EXPORT_DIR/smartlab-client.crt" "$FLASK_CERTS/client.crt"
+cp "$EXPORT_DIR/smartlab-client.key" "$FLASK_CERTS/client.key"
 
 cp "$CA_DIR/ca.crt" "$EXPORT_DIR/ca.crt"
 

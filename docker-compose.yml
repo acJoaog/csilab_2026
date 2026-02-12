@@ -35,22 +35,36 @@ services:
     networks:
       - smartlab-network
 
+  nginx:
+    image: nginx:latest
+    container_name: smartlab-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./flask-api/certs:/certs:ro
+    depends_on:
+      - flask-api
+    restart: unless-stopped
+    networks:
+      - smartlab-network
+
   flask-api:
     build: ./flask-api
     container_name: smartlab-api
-    ports:
-      - "8443:8443"
+    expose:
+      - "5000"
     volumes:
       - ./flask-api/certs:/app/certs:ro
     environment:
       - FLASK_ENV=production
-      - DB_HOST=192.168.66.11
+      - DB_HOST=postgres
       - DB_PORT=5432
       - DB_NAME=smartlab_db
       - DB_USER=smartlab
       - DB_PASSWORD=admin
       - DB_SSLMODE=verify-full
-      - DB_SSLROOTCERT=/app/certs/ca.crt
       - DB_SSLCERT=/app/certs/client.crt
       - DB_SSLKEY=/app/certs/client.key
     restart: unless-stopped

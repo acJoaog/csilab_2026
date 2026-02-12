@@ -5,9 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
-COPY certs ./certs
+COPY . .
 
-EXPOSE 8443
-
-CMD ["python", "app.py"]
+# Remova qualquer app.run()
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
