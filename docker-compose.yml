@@ -19,7 +19,7 @@ services:
   postgres:
     build: ./postgres
     container_name: smartlab-postgres
-    user: "root:root"  # 🔥 ESSENCIAL! Inicia como root
+    user: "root:root"  # ESSENCIAL! Inicia como root
     environment:
       POSTGRES_USER: smartlab
       POSTGRES_PASSWORD: admin
@@ -47,7 +47,7 @@ services:
       - DB_HOST=192.168.66.11
       - DB_PORT=5432
       - DB_NAME=smartlab_db
-      - DB_USER=admin
+      - DB_USER=smartlab
       - DB_PASSWORD=admin
       - DB_SSLMODE=verify-full
       - DB_SSLROOTCERT=/app/certs/ca.crt
