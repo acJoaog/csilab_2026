@@ -54,6 +54,7 @@ mk "$MQTT_CERTS"
 mk "$POSTGRES_CERTS"
 mk "$NGINX_CERTS"
 mk "$EXPORT_DIR"
+mk "$FLASK_CERTS"
 
 # =========================================================
 # CA

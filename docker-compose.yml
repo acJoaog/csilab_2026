@@ -43,7 +43,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./flask-api/certs:/certs:ro
+      - ./nginx/certs:/certs:ro
     depends_on:
       - flask-api
     restart: unless-stopped
