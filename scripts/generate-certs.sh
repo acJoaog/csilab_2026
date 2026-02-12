@@ -24,7 +24,7 @@ SUBJ_CA="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=IoT CA"
 SUBJ_MQTT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=mqtt-broker"
 SUBJ_POSTGRES="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=postgres-db"
 SUBJ_FLASK="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=flask-api"
-SUBJ_CLIENT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=client"
+SUBJ_CLIENT="/C=BR/ST=Sao_Paulo/L=Sao_Paulo/O=IoT Company/CN=smartlab"
 
 # =========================================================
 # HELPERS
@@ -113,17 +113,25 @@ chmod 644 "$FLASK_CERTS/server.crt"
 chmod 644 "$FLASK_CERTS/ca.crt"
 
 # =========================================================
-# CLIENT (EXPORT ONLY)
+# CLIENTS (EXPORT)
 # =========================================================
-echo "🔐 Client (export)..."
+echo "🔐 Clients smartlab (export)..."
+
+# client.key / client.crt
 gen_key "$EXPORT_DIR/client.key"
 gen_csr "$EXPORT_DIR/client.key" "$EXPORT_DIR/client.csr" "$SUBJ_CLIENT"
 sign "$EXPORT_DIR/client.csr" "$EXPORT_DIR/client.crt"
 rm "$EXPORT_DIR/client.csr"
 
-cp "$CA_DIR/ca.crt" "$EXPORT_DIR/"
+# smartlab-client.key / smartlab-client.crt
+gen_key "$EXPORT_DIR/smartlab-client.key"
+gen_csr "$EXPORT_DIR/smartlab-client.key" "$EXPORT_DIR/smartlab-client.csr" "$SUBJ_CLIENT"
+sign "$EXPORT_DIR/smartlab-client.csr" "$EXPORT_DIR/smartlab-client.crt"
+rm "$EXPORT_DIR/smartlab-client.csr"
 
-chmod 777 "$EXPORT_DIR"
-chmod 777 "$EXPORT_DIR"/*
+cp "$CA_DIR/ca.crt" "$EXPORT_DIR/ca.crt"
+
+chmod 600 "$EXPORT_DIR"/*.key
+chmod 644 "$EXPORT_DIR"/*.crt
 
 echo "✅ Certificados gerados com sucesso"
