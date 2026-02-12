@@ -24,35 +24,33 @@ def health():
 def db_check():
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            # SSL ativo?
+            # Verifica se SSL está ativo
             cur.execute("SHOW ssl;")
             ssl_on = cur.fetchone()[0]
             
-            # Detalhes da conexão atual
-            cur.execute("""
-                SELECT 
-                    ssl_cipher,
-                    ssl_version,
-                    ssl_compression
-                FROM pg_stat_ssl 
-                WHERE pid = pg_backend_pid();
-            """)
-            result = cur.fetchone()
+            # USA A FUNÇÃO CORRETA - NÃO É COLUNA!
+            cipher = None
+            try:
+                cur.execute("SELECT ssl_cipher();")
+                result = cur.fetchone()
+                if result:
+                    cipher = result[0]
+            except psycopg.Error:
+                cipher = "não disponível"
             
-            # Configurações SSL do servidor
-            cur.execute("""
-                SELECT name, setting 
-                FROM pg_settings 
-                WHERE name IN ('ssl_ciphers', 'ssl_min_protocol_version');
-            """)
-            ssl_settings = dict(cur.fetchall())
+            # Versão SSL (opcional)
+            ssl_version = None
+            try:
+                cur.execute("SELECT ssl_version();")
+                result = cur.fetchone()
+                if result:
+                    ssl_version = result[0]
+            except psycopg.Error:
+                ssl_version = "não disponível"
 
     return {
         "ssl": ssl_on,
-        "cipher": result[0] if result else None,
-        "ssl_version": result[1] if result and len(result) > 1 else None,
-        "compression": result[2] if result and len(result) > 2 else None,
-        "server_ciphers": ssl_settings.get('ssl_ciphers'),
-        "min_protocol": ssl_settings.get('ssl_min_protocol_version')
+        "cipher": cipher,
+        "ssl_version": ssl_version
     }
 
