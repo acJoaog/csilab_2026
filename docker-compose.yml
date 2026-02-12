@@ -19,7 +19,7 @@ services:
   postgres:
     build: ./postgres
     container_name: smartlab-postgres
-    user: "root:root"  # ESSENCIAL! Inicia como root
+    #user: "root:root"  # ESSENCIAL! Inicia como root
     environment:
       POSTGRES_USER: smartlab
       POSTGRES_PASSWORD: admin
@@ -30,7 +30,7 @@ services:
       #- ./postgres/certs:/etc/postgresql/certs:ro
       - ./postgres/conf/postgresql.conf:/tmp/postgresql.conf
       - ./postgres/conf/pg_hba.conf:/tmp/pg_hba.conf
-      - postgres-data:/var/lib/postgresql/data
+      #- postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - smartlab-network
